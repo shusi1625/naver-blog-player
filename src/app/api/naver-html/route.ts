@@ -107,7 +107,7 @@ function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
 
 function renderSplitWidget(baseUrl: string, index: number): string | null {
   if (index === 1) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:5px 10px"><b style="font-size:14px;line-height:15px;color:#111">Wavy Top 10</b><br><span style="font-size:9px;color:#777">recent Spotify picks</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#fbfaf6;border:1px solid #e8e3d8;border-left:4px solid #1db954;box-sizing:border-box;padding:5px 9px 4px 10px"><b style="display:block;font-size:13px;line-height:15px;color:#14130f;letter-spacing:0">Wavy Top 10</b><span style="display:block;margin-top:2px;font-size:8.5px;line-height:11px;color:#6f6a60">Spotify recent tracks</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
 
   if (index === 2) {
@@ -119,7 +119,7 @@ function renderSplitWidget(baseUrl: string, index: number): string | null {
   }
 
   if (index === 4) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:6px 10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="font-size:10px;line-height:12px;color:#1db954;text-decoration:none">open full chart</a><br><span style="font-size:9px;color:#777">updated daily</span></div></div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#fbfaf6;border:1px solid #e8e3d8;border-left:4px solid #1db954;box-sizing:border-box;padding:5px 9px 4px 10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="display:block;font-size:10.5px;line-height:13px;color:#138a3d;text-decoration:none;font-weight:bold">open full chart</a><span style="display:block;margin-top:2px;font-size:8.5px;line-height:11px;color:#6f6a60">updated daily</span></div></div>`;
   }
 
   return null;

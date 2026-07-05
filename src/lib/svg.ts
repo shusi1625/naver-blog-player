@@ -29,29 +29,31 @@ export function renderRankSvg(data: WidgetData | null, rank: number): string {
 
   if (!track) {
     return svgShell(
-      170,
-      52,
-      `<rect width="170" height="52" fill="none"/>
-<rect x="2" y="4" width="166" height="44" rx="7" fill="#fbfbf8" stroke="#ece9df"/>
-<rect x="8" y="13" width="23" height="23" rx="11.5" fill="${accent}"/>
-<text x="19.5" y="28.5" text-anchor="middle" font-size="10" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
-<text x="39" y="22" font-size="11.5" font-family="${FONT}" font-weight="700" fill="#9b978e">loading...</text>
-<text x="39" y="38" font-size="9.5" font-family="${FONT}" fill="#777777">not updated yet</text>`
+      154,
+      43,
+      `<rect width="154" height="43" fill="none"/>
+<rect x="0.5" y="0.5" width="153" height="42" rx="6" fill="#fbfaf6" stroke="#e8e3d8"/>
+<rect x="0.5" y="0.5" width="4" height="42" rx="2" fill="${accent}"/>
+<rect x="10" y="10.5" width="22" height="22" rx="11" fill="${accent}"/>
+<text x="21" y="25" text-anchor="middle" font-size="8.5" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
+<text x="40" y="17.5" font-size="10.2" font-family="${FONT}" font-weight="700" fill="#9b978e">loading...</text>
+<text x="40" y="31.5" font-size="8.3" font-family="${FONT}" fill="#777777">not updated yet</text>`
     );
   }
 
-  const title = escapeXml(truncateText(track.name, 16));
-  const artists = escapeXml(truncateText(joinArtists(track.artists), 18));
+  const title = escapeXml(truncateText(track.name, 18));
+  const artists = escapeXml(truncateText(joinArtists(track.artists), 19));
 
   return svgShell(
-    170,
-    52,
-    `<rect width="170" height="52" fill="none"/>
-<rect x="2" y="4" width="166" height="44" rx="7" fill="#fbfbf8" stroke="#ece9df"/>
-<rect x="8" y="13" width="23" height="23" rx="11.5" fill="${accent}"/>
-<text x="19.5" y="28.5" text-anchor="middle" font-size="10" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
-<text x="39" y="22" font-size="11.5" font-family="${FONT}" font-weight="700" fill="#1a1a18">${title}</text>
-<text x="39" y="38" font-size="9.5" font-family="${FONT}" fill="#68645d">${artists}</text>`
+    154,
+    43,
+    `<rect width="154" height="43" fill="none"/>
+<rect x="0.5" y="0.5" width="153" height="42" rx="6" fill="#fbfaf6" stroke="#e8e3d8"/>
+<rect x="0.5" y="0.5" width="4" height="42" rx="2" fill="${accent}"/>
+<rect x="10" y="10.5" width="22" height="22" rx="11" fill="${accent}"/>
+<text x="21" y="25" text-anchor="middle" font-size="8.5" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
+<text x="40" y="17.5" font-size="10.2" font-family="${FONT}" font-weight="700" fill="#181714">${title}</text>
+<text x="40" y="31.5" font-size="8.3" font-family="${FONT}" fill="#6f6a60">${artists}</text>`
   );
 }
 
