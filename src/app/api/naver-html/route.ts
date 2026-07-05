@@ -107,19 +107,19 @@ function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
 
 function renderSplitWidget(baseUrl: string, index: number): string | null {
   if (index === 1) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#fbfaf6;border:1px solid #e8e3d8;border-left:4px solid #1db954;box-sizing:border-box;padding:5px 9px 4px 10px"><b style="display:block;font-size:13px;line-height:15px;color:#14130f;letter-spacing:0">Wavy Top 10</b><span style="display:block;margin-top:2px;font-size:8.5px;line-height:11px;color:#6f6a60">Spotify recent tracks</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;background:#121212;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#121212;box-sizing:border-box;padding:8px 9px"><b style="display:block;font-size:13px;line-height:15px;color:#f5f5f5;letter-spacing:0">Wavy Top 10</b><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">recent Spotify tracks</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
 
   if (index === 2) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;background:#121212">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
   }
 
   if (index === 3) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:1px;box-sizing:border-box">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:1px;box-sizing:border-box;background:#121212">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
   }
 
   if (index === 4) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#fbfaf6;border:1px solid #e8e3d8;border-left:4px solid #1db954;box-sizing:border-box;padding:5px 9px 4px 10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="display:block;font-size:10.5px;line-height:13px;color:#138a3d;text-decoration:none;font-weight:bold">open full chart</a><span style="display:block;margin-top:2px;font-size:8.5px;line-height:11px;color:#6f6a60">updated daily</span></div></div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">open full chart</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">updated daily</span></div></div>`;
   }
 
   return null;

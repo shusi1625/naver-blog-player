@@ -10,15 +10,7 @@ function svgShell(width: number, height: number, children: string): string {
 }
 
 function rankAccent(rank: number): string {
-  if (rank <= 3) {
-    return "#1db954";
-  }
-
-  if (rank <= 6) {
-    return "#3a6ea5";
-  }
-
-  return "#d05f45";
+  return rank === 1 ? "#1db954" : "#a7a7a7";
 }
 
 export function renderRankSvg(data: WidgetData | null, rank: number): string {
@@ -28,32 +20,37 @@ export function renderRankSvg(data: WidgetData | null, rank: number): string {
   const accent = rankAccent(safeRank);
 
   if (!track) {
+    const background = safeRank === 1 ? "#1e1e1e" : "#121212";
+
     return svgShell(
       154,
       43,
       `<rect width="154" height="43" fill="none"/>
-<rect x="0.5" y="0.5" width="153" height="42" rx="6" fill="#fbfaf6" stroke="#e8e3d8"/>
-<rect x="0.5" y="0.5" width="4" height="42" rx="2" fill="${accent}"/>
-<rect x="10" y="10.5" width="22" height="22" rx="11" fill="${accent}"/>
-<text x="21" y="25" text-anchor="middle" font-size="8.5" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
-<text x="40" y="17.5" font-size="10.2" font-family="${FONT}" font-weight="700" fill="#9b978e">loading...</text>
-<text x="40" y="31.5" font-size="8.3" font-family="${FONT}" fill="#777777">not updated yet</text>`
+<rect width="154" height="43" fill="${background}"/>
+<rect x="4" y="4" width="35" height="35" fill="#2a2a2a"/>
+<text x="21.5" y="25" text-anchor="middle" font-size="9" font-family="${FONT}" font-weight="700" fill="#777777">${rankLabel}</text>
+<text x="47" y="17.5" font-size="10.5" font-family="${FONT}" font-weight="700" fill="#9b9b9b">loading...</text>
+<text x="47" y="31.5" font-size="8.5" font-family="${FONT}" fill="#777777">not updated yet</text>`
     );
   }
 
   const title = escapeXml(truncateText(track.name, 18));
-  const artists = escapeXml(truncateText(joinArtists(track.artists), 19));
+  const artists = escapeXml(truncateText(`${rankLabel} · ${joinArtists(track.artists)}`, 19));
+  const background = safeRank === 1 ? "#1e1e1e" : "#121212";
+  const titleColor = safeRank === 1 ? accent : "#f2f2f2";
+  const artistColor = safeRank === 1 ? "#f2f2f2" : "#a7a7a7";
+  const clipId = `cover-${safeRank}`;
 
   return svgShell(
     154,
     43,
     `<rect width="154" height="43" fill="none"/>
-<rect x="0.5" y="0.5" width="153" height="42" rx="6" fill="#fbfaf6" stroke="#e8e3d8"/>
-<rect x="0.5" y="0.5" width="4" height="42" rx="2" fill="${accent}"/>
-<rect x="10" y="10.5" width="22" height="22" rx="11" fill="${accent}"/>
-<text x="21" y="25" text-anchor="middle" font-size="8.5" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
-<text x="40" y="17.5" font-size="10.2" font-family="${FONT}" font-weight="700" fill="#181714">${title}</text>
-<text x="40" y="31.5" font-size="8.3" font-family="${FONT}" fill="#6f6a60">${artists}</text>`
+<rect width="154" height="43" fill="${background}"/>
+<clipPath id="${clipId}"><rect x="4" y="4" width="35" height="35"/></clipPath>
+<rect x="4" y="4" width="35" height="35" fill="#2a2a2a"/>
+<image href="/api/cover/${safeRank}" x="4" y="4" width="35" height="35" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clipId})"/>
+<text x="47" y="17.5" font-size="10.5" font-family="${FONT}" font-weight="700" fill="${titleColor}">${title}</text>
+<text x="47" y="31.5" font-size="8.5" font-family="${FONT}" fill="${artistColor}">${artists}</text>`
   );
 }
 
