@@ -62,19 +62,19 @@ function renderCompactRow(baseUrl: string, rank: number): string {
 
 function renderSplitWidget(baseUrl: string, index: number): string | null {
   if (index === 1) {
-    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif;background:#fff"><div style="height:50px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:8px 10px"><b style="font-size:15px;line-height:17px;color:#111">Wavy Top 10</b><br><span style="font-size:9px;color:#777">recent Spotify picks</span></div>${renderCompactRow(baseUrl, 1)}${renderCompactRow(baseUrl, 2)}</div>`;
+    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:50px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:8px 10px"><b style="font-size:15px;line-height:17px;color:#111">Wavy Top 10</b><br><span style="font-size:9px;color:#777">recent Spotify picks</span></div>${renderCompactRow(baseUrl, 1)}${renderCompactRow(baseUrl, 2)}</div>`;
   }
 
   if (index === 2) {
-    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;background:#fff">${renderCompactRow(baseUrl, 3)}${renderCompactRow(baseUrl, 4)}${renderCompactRow(baseUrl, 5)}</div>`;
+    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto">${renderCompactRow(baseUrl, 3)}${renderCompactRow(baseUrl, 4)}${renderCompactRow(baseUrl, 5)}</div>`;
   }
 
   if (index === 3) {
-    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;background:#fff">${renderCompactRow(baseUrl, 6)}${renderCompactRow(baseUrl, 7)}${renderCompactRow(baseUrl, 8)}</div>`;
+    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto">${renderCompactRow(baseUrl, 6)}${renderCompactRow(baseUrl, 7)}${renderCompactRow(baseUrl, 8)}</div>`;
   }
 
   if (index === 4) {
-    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif;background:#fff">${renderCompactRow(baseUrl, 9)}${renderCompactRow(baseUrl, 10)}<div style="height:50px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="font-size:10px;line-height:12px;color:#1db954;text-decoration:none">open full chart</a><br><span style="font-size:9px;color:#777">updated daily</span></div></div>`;
+    return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9)}${renderCompactRow(baseUrl, 10)}<div style="height:50px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="font-size:10px;line-height:12px;color:#1db954;text-decoration:none">open full chart</a><br><span style="font-size:9px;color:#777">updated daily</span></div></div>`;
   }
 
   return null;

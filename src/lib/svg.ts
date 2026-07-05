@@ -31,7 +31,7 @@ export function renderRankSvg(data: WidgetData | null, rank: number): string {
     return svgShell(
       170,
       52,
-      `<rect width="170" height="52" fill="#ffffff"/>
+      `<rect width="170" height="52" fill="none"/>
 <rect x="2" y="4" width="166" height="44" rx="7" fill="#fbfbf8" stroke="#ece9df"/>
 <rect x="8" y="13" width="23" height="23" rx="11.5" fill="${accent}"/>
 <text x="19.5" y="28.5" text-anchor="middle" font-size="10" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
@@ -46,7 +46,7 @@ export function renderRankSvg(data: WidgetData | null, rank: number): string {
   return svgShell(
     170,
     52,
-    `<rect width="170" height="52" fill="#ffffff"/>
+    `<rect width="170" height="52" fill="none"/>
 <rect x="2" y="4" width="166" height="44" rx="7" fill="#fbfbf8" stroke="#ece9df"/>
 <rect x="8" y="13" width="23" height="23" rx="11.5" fill="${accent}"/>
 <text x="19.5" y="28.5" text-anchor="middle" font-size="10" font-family="${FONT}" font-weight="700" fill="#ffffff">${rankLabel}</text>
@@ -79,7 +79,7 @@ export function renderFullWidgetSvg(data: WidgetData | null): string {
   return svgShell(
     170,
     570,
-    `<rect width="170" height="570" rx="0" fill="#ffffff"/>
+    `<rect width="170" height="570" rx="0" fill="none"/>
 <rect x="10" y="10" width="150" height="42" rx="8" fill="#f7f5ef" stroke="#ece9df"/>
 <text x="20" y="28" font-size="14" font-family="${FONT}" font-weight="700" fill="#111111">${title}</text>
 <text x="20" y="43" font-size="9" font-family="${FONT}" fill="#777777">updated ${escapeXml(updatedAt)}</text>
