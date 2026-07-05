@@ -133,7 +133,7 @@ export async function fetchTopTracks(options: {
     albumName: track.album.name,
     spotifyUrl: track.external_urls.spotify ?? `https://open.spotify.com/track/${track.id}`,
     previewUrl: track.preview_url ?? null,
-    imageUrl: track.album.images?.[0]?.url ?? null,
+    imageUrl: track.album.images?.at(-1)?.url ?? track.album.images?.[0]?.url ?? null,
     durationMs: track.duration_ms
   }));
 }
@@ -154,6 +154,6 @@ export async function fetchCurrentUserProfile(accessToken: string): Promise<Spot
   return {
     displayName: payload.display_name ?? null,
     spotifyUrl: payload.external_urls?.spotify ?? null,
-    imageUrl: payload.images?.[0]?.url ?? null
+    imageUrl: payload.images?.at(-1)?.url ?? payload.images?.[0]?.url ?? null
   };
 }

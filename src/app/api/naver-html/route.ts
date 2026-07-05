@@ -1,4 +1,4 @@
-import { getWidgetBaseUrl, getWidgetProfileUrl } from "@/lib/env";
+import { getWidgetBaseUrl } from "@/lib/env";
 import { formatKstShort } from "@/lib/date";
 import { getWidgetData } from "@/lib/storage";
 import type { WidgetData } from "@/types/widget";
@@ -7,6 +7,7 @@ const COMPACT_WIDTH = "154";
 const COMPACT_HEIGHT = "150";
 const COMPACT_ROW_HEIGHT = "43";
 const COMPACT_GAP = "10";
+const SPOTIFY_PROFILE_URL = "https://open.spotify.com/user/31exfjrt452lr2qgfqz7wt5245h4?si=99913f921efc4054";
 
 function renderRow(baseUrl: string, rank: number, pretty: boolean): string {
   const href = `${baseUrl}/go/${rank}`;
@@ -130,8 +131,8 @@ function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | nu
   }
 
   if (index === 4) {
-    const profileUrl = data?.profile?.spotifyUrl ?? getWidgetProfileUrl() ?? "https://open.spotify.com/";
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Spotify profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
+    const profileUrl = SPOTIFY_PROFILE_URL;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
   }
 
   return null;

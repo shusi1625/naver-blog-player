@@ -13,7 +13,7 @@ function rankAccent(rank: number): string {
   return rank === 1 ? "#1db954" : "#a7a7a7";
 }
 
-export function renderRankSvg(data: WidgetData | null, rank: number): string {
+export function renderRankSvg(data: WidgetData | null, rank: number, coverDataUri?: string | null): string {
   const safeRank = Number.isInteger(rank) && rank >= 1 && rank <= 10 ? rank : 1;
   const track = data?.tracks.find((item) => item.rank === safeRank);
   const rankLabel = String(safeRank).padStart(2, "0");
@@ -35,7 +35,7 @@ export function renderRankSvg(data: WidgetData | null, rank: number): string {
   }
 
   const title = escapeXml(truncateText(track.name, 18));
-  const artists = escapeXml(truncateText(`${rankLabel} · ${joinArtists(track.artists)}`, 19));
+  const artists = escapeXml(truncateText(`${rankLabel} - ${joinArtists(track.artists)}`, 19));
   const background = safeRank === 1 ? "#1e1e1e" : "#121212";
   const titleColor = safeRank === 1 ? accent : "#f2f2f2";
   const artistColor = safeRank === 1 ? "#f2f2f2" : "#a7a7a7";
@@ -48,7 +48,7 @@ export function renderRankSvg(data: WidgetData | null, rank: number): string {
 <rect width="154" height="43" fill="${background}"/>
 <clipPath id="${clipId}"><rect x="4" y="4" width="35" height="35"/></clipPath>
 <rect x="4" y="4" width="35" height="35" fill="#2a2a2a"/>
-<image href="/api/cover/${safeRank}" x="4" y="4" width="35" height="35" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clipId})"/>
+${coverDataUri ? `<image href="${escapeXml(coverDataUri)}" x="4" y="4" width="35" height="35" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clipId})"/>` : ""}
 <text x="47" y="17.5" font-size="10.5" font-family="${FONT}" font-weight="700" fill="${titleColor}">${title}</text>
 <text x="47" y="31.5" font-size="8.5" font-family="${FONT}" fill="${artistColor}">${artists}</text>`
   );
