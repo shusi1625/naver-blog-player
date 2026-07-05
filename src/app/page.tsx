@@ -14,6 +14,9 @@ export default function Home() {
           <a href="/api/widget.svg">View full SVG</a>
         </li>
         <li>
+          <a href="/demo">View design demo</a>
+        </li>
+        <li>
           <a href="/api/naver-html?format=min">Get Naver widget HTML</a>
         </li>
       </ul>
