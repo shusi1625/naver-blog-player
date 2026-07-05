@@ -23,10 +23,10 @@ export function renderRankSvg(data: WidgetData | null, rank: number, coverDataUr
     const background = safeRank === 1 ? "#1e1e1e" : "#121212";
 
     return svgShell(
-      154,
+      170,
       43,
-      `<rect width="154" height="43" fill="none"/>
-<rect width="154" height="43" fill="${background}"/>
+      `<rect width="170" height="43" fill="none"/>
+<rect width="170" height="43" fill="${background}"/>
 <rect x="4" y="4" width="35" height="35" fill="#2a2a2a"/>
 <text x="21.5" y="25" text-anchor="middle" font-size="9" font-family="${FONT}" font-weight="700" fill="#777777">${rankLabel}</text>
 <text x="47" y="17.5" font-size="10.5" font-family="${FONT}" font-weight="700" fill="#9b9b9b">loading...</text>
@@ -34,18 +34,18 @@ export function renderRankSvg(data: WidgetData | null, rank: number, coverDataUr
     );
   }
 
-  const title = escapeXml(truncateText(track.name, 18));
-  const artists = escapeXml(truncateText(`${rankLabel} - ${joinArtists(track.artists)}`, 19));
+  const title = escapeXml(truncateText(track.name, 21));
+  const artists = escapeXml(truncateText(`${rankLabel} - ${joinArtists(track.artists)}`, 22));
   const background = safeRank === 1 ? "#1e1e1e" : "#121212";
   const titleColor = safeRank === 1 ? accent : "#f2f2f2";
   const artistColor = safeRank === 1 ? "#f2f2f2" : "#a7a7a7";
   const clipId = `cover-${safeRank}`;
 
   return svgShell(
-    154,
+    170,
     43,
-    `<rect width="154" height="43" fill="none"/>
-<rect width="154" height="43" fill="${background}"/>
+    `<rect width="170" height="43" fill="none"/>
+<rect width="170" height="43" fill="${background}"/>
 <clipPath id="${clipId}"><rect x="4" y="4" width="35" height="35"/></clipPath>
 <rect x="4" y="4" width="35" height="35" fill="#2a2a2a"/>
 ${coverDataUri ? `<image href="${escapeXml(coverDataUri)}" x="4" y="4" width="35" height="35" preserveAspectRatio="xMidYMid slice" clip-path="url(#${clipId})"/>` : ""}

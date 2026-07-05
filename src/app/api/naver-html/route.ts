@@ -3,10 +3,11 @@ import { formatKstShort } from "@/lib/date";
 import { getWidgetData } from "@/lib/storage";
 import type { WidgetData } from "@/types/widget";
 
-const COMPACT_WIDTH = "154";
+const COMPACT_WIDTH = "170";
 const COMPACT_HEIGHT = "150";
 const COMPACT_ROW_HEIGHT = "43";
 const COMPACT_GAP = "10";
+const NAVER_BODY_OFFSET = "position:relative;left:-8px;";
 const SPOTIFY_PROFILE_URL = "https://open.spotify.com/user/31exfjrt452lr2qgfqz7wt5245h4?si=99913f921efc4054";
 
 function renderRow(baseUrl: string, rank: number, pretty: boolean): string {
@@ -119,20 +120,20 @@ function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
 
 function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | null): string | null {
   if (index === 1) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;background:#121212;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#121212;box-sizing:border-box"><img src="${baseUrl}/api/profile-image" width="31" height="31" border="0" style="display:block;float:left;width:31px;height:31px;margin:6px 8px 0 4px;border-radius:16px"><b style="display:block;padding-top:7px;font-size:13px;line-height:15px;color:#f5f5f5;letter-spacing:0">Top 10</b><span style="display:block;margin-top:2px;font-size:8.5px;line-height:10px;color:#9b9b9b">${getUpdatedLabel(data)}</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:#121212;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#121212;box-sizing:border-box"><img src="${baseUrl}/api/profile-image" width="31" height="31" border="0" style="display:block;float:left;width:31px;height:31px;margin:6px 8px 0 4px;border-radius:16px"><b style="display:block;padding-top:7px;font-size:13px;line-height:15px;color:#f5f5f5;letter-spacing:0">Top 10</b><span style="display:block;margin-top:2px;font-size:8.5px;line-height:10px;color:#9b9b9b">${getUpdatedLabel(data)}</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
 
   if (index === 2) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;background:#121212">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:#121212">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
   }
 
   if (index === 3) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:1px;box-sizing:border-box;background:#121212">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:1px;box-sizing:border-box;background:#121212">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
   }
 
   if (index === 4) {
     const profileUrl = SPOTIFY_PROFILE_URL;
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
   }
 
   return null;
