@@ -64,6 +64,46 @@ function renderSpacer(): string {
   return `<div style="height:8px;line-height:8px;font-size:0"></div>`;
 }
 
+function renderPairRow(baseUrl: string, rank: number): string {
+  return `<a href="${baseUrl}/go/${rank}" target="_blank"><img src="${baseUrl}/api/rank/${rank}.svg" width="154" height="47" border="0" style="display:block;width:154px;height:47px"></a>`;
+}
+
+function renderHeaderWidget(): string {
+  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:38px;line-height:38px;font-size:0"></div><div style="height:74px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:12px 12px"><b style="display:block;font-size:17px;line-height:20px;color:#101010">Wavy Top 10</b><span style="display:block;margin-top:4px;font-size:10px;line-height:13px;color:#666">Spotify recent tracks</span><span style="display:block;margin-top:2px;font-size:9px;line-height:12px;color:#1db954">updated daily</span></div><div style="height:38px;line-height:38px;font-size:0"></div></div>`;
+}
+
+function renderPairWidget(baseUrl: string, firstRank: number): string | null {
+  if (firstRank < 1 || firstRank > 9 || firstRank % 2 === 0) {
+    return null;
+  }
+
+  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto"><div style="height:24px;line-height:24px;font-size:0"></div>${renderPairRow(baseUrl, firstRank)}<div style="height:8px;line-height:8px;font-size:0"></div>${renderPairRow(baseUrl, firstRank + 1)}<div style="height:24px;line-height:24px;font-size:0"></div></div>`;
+}
+
+function renderFooterWidget(baseUrl: string): string {
+  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:38px;line-height:38px;font-size:0"></div><div style="height:74px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:13px 12px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="display:block;font-size:13px;line-height:16px;color:#1db954;text-decoration:none;font-weight:bold">open full chart</a><span style="display:block;margin-top:5px;font-size:10px;line-height:13px;color:#666">click each track to Spotify</span><span style="display:block;margin-top:2px;font-size:9px;line-height:12px;color:#888">short term ranking</span></div><div style="height:38px;line-height:38px;font-size:0"></div></div>`;
+}
+
+function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
+  if (mode === "header") {
+    return renderHeaderWidget();
+  }
+
+  if (mode === "footer") {
+    return renderFooterWidget(baseUrl);
+  }
+
+  if (mode.startsWith("pair-")) {
+    const [first, second] = mode.replace("pair-", "").split("-").map(Number);
+
+    if (second === first + 1) {
+      return renderPairWidget(baseUrl, first);
+    }
+  }
+
+  return null;
+}
+
 function renderSplitWidget(baseUrl: string, index: number): string | null {
   if (index === 1) {
     return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:44.67px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:6px 10px"><b style="font-size:14px;line-height:16px;color:#111">Wavy Top 10</b><br><span style="font-size:9px;color:#777">recent Spotify picks</span></div>${renderSpacer()}${renderCompactRow(baseUrl, 1)}${renderSpacer()}${renderCompactRow(baseUrl, 2)}</div>`;
@@ -118,6 +158,12 @@ export async function GET(request: Request) {
 
   if (mode === "table-image") {
     return plainTextResponse(renderTableImageWidget(baseUrl));
+  }
+
+  const sevenPartWidget = renderSevenPartWidget(baseUrl, mode);
+
+  if (sevenPartWidget) {
+    return plainTextResponse(sevenPartWidget);
   }
 
   if (mode.startsWith("split-")) {
