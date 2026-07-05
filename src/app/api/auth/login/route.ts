@@ -9,7 +9,7 @@ export async function GET() {
 
   authorizeUrl.searchParams.set("response_type", "code");
   authorizeUrl.searchParams.set("client_id", readRequiredEnv("SPOTIFY_CLIENT_ID"));
-  authorizeUrl.searchParams.set("scope", "user-top-read");
+  authorizeUrl.searchParams.set("scope", "user-top-read user-read-private");
   authorizeUrl.searchParams.set("redirect_uri", readRequiredEnv("SPOTIFY_REDIRECT_URI"));
   authorizeUrl.searchParams.set("state", state);
 

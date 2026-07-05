@@ -30,6 +30,14 @@ export function getWidgetBaseUrl(): string {
   return value.replace(/\/+$/, "");
 }
 
+export function getWidgetProfileImageUrl(): string | undefined {
+  return readOptionalEnv("WIDGET_PROFILE_IMAGE_URL");
+}
+
+export function getWidgetProfileUrl(): string | undefined {
+  return readOptionalEnv("WIDGET_PROFILE_URL");
+}
+
 export function getWidgetTimeRange(): TimeRange {
   const value = readOptionalEnv("WIDGET_TIME_RANGE") ?? "short_term";
 

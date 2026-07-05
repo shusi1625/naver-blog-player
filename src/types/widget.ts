@@ -12,10 +12,17 @@ export type TopTrack = {
   durationMs?: number;
 };
 
+export type SpotifyProfile = {
+  displayName?: string | null;
+  spotifyUrl?: string | null;
+  imageUrl?: string | null;
+};
+
 export type WidgetData = {
   updatedAt: string;
   updatedAtKst: string;
   source: "spotify-top-tracks";
   timeRange: TimeRange;
+  profile?: SpotifyProfile | null;
   tracks: TopTrack[];
 };

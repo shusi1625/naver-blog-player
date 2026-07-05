@@ -1,4 +1,4 @@
-import type { TimeRange, TopTrack } from "@/types/widget";
+import type { SpotifyProfile, TimeRange, TopTrack } from "@/types/widget";
 import { readRequiredEnv } from "@/lib/env";
 
 type SpotifyTokenResponse = {
@@ -27,6 +27,18 @@ type SpotifyTrackItem = {
 
 type SpotifyTopTracksResponse = {
   items?: SpotifyTrackItem[];
+  error?: {
+    status: number;
+    message: string;
+  };
+};
+
+type SpotifyCurrentUserResponse = {
+  display_name?: string | null;
+  external_urls?: {
+    spotify?: string;
+  };
+  images?: Array<{ url: string; height: number | null; width: number | null }>;
   error?: {
     status: number;
     message: string;
@@ -124,4 +136,24 @@ export async function fetchTopTracks(options: {
     imageUrl: track.album.images?.[0]?.url ?? null,
     durationMs: track.duration_ms
   }));
+}
+
+export async function fetchCurrentUserProfile(accessToken: string): Promise<SpotifyProfile | null> {
+  const response = await fetch("https://api.spotify.com/v1/me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  const payload = (await response.json()) as SpotifyCurrentUserResponse;
+
+  if (!response.ok || payload.error) {
+    return null;
+  }
+
+  return {
+    displayName: payload.display_name ?? null,
+    spotifyUrl: payload.external_urls?.spotify ?? null,
+    imageUrl: payload.images?.[0]?.url ?? null
+  };
 }

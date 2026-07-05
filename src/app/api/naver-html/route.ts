@@ -1,4 +1,7 @@
-import { getWidgetBaseUrl } from "@/lib/env";
+import { getWidgetBaseUrl, getWidgetProfileUrl } from "@/lib/env";
+import { formatKstShort } from "@/lib/date";
+import { getWidgetData } from "@/lib/storage";
+import type { WidgetData } from "@/types/widget";
 
 const COMPACT_WIDTH = "154";
 const COMPACT_HEIGHT = "150";
@@ -65,6 +68,14 @@ function renderCompactRow(baseUrl: string, rank: number, marginBottom = "0"): st
   return `<a href="${baseUrl}/go/${rank}" target="_blank" style="display:block;text-decoration:none"><img src="${baseUrl}/api/rank/${rank}.svg" width="${COMPACT_WIDTH}" height="${COMPACT_ROW_HEIGHT}" border="0" style="display:block;width:${COMPACT_WIDTH}px;height:${COMPACT_ROW_HEIGHT}px;margin:0 0 ${marginBottom}px 0"></a>`;
 }
 
+function getUpdatedLabel(data: WidgetData | null): string {
+  if (!data?.updatedAt) {
+    return "not updated";
+  }
+
+  return `${formatKstShort(new Date(data.updatedAt))} updated`;
+}
+
 function renderPairRow(baseUrl: string, rank: number): string {
   return `<a href="${baseUrl}/go/${rank}" target="_blank"><img src="${baseUrl}/api/rank/${rank}.svg" width="154" height="47" border="0" style="display:block;width:154px;height:47px"></a>`;
 }
@@ -105,9 +116,9 @@ function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
   return null;
 }
 
-function renderSplitWidget(baseUrl: string, index: number): string | null {
+function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | null): string | null {
   if (index === 1) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;background:#121212;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#121212;box-sizing:border-box;padding:8px 9px"><b style="display:block;font-size:13px;line-height:15px;color:#f5f5f5;letter-spacing:0">Wavy Top 10</b><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">recent Spotify tracks</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;background:#121212;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#121212;box-sizing:border-box"><img src="${baseUrl}/api/profile-image" width="31" height="31" border="0" style="display:block;float:left;width:31px;height:31px;margin:6px 8px 0 4px;border-radius:16px"><b style="display:block;padding-top:7px;font-size:13px;line-height:15px;color:#f5f5f5;letter-spacing:0">Top 10</b><span style="display:block;margin-top:2px;font-size:8.5px;line-height:10px;color:#9b9b9b">${getUpdatedLabel(data)}</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
 
   if (index === 2) {
@@ -119,7 +130,8 @@ function renderSplitWidget(baseUrl: string, index: number): string | null {
   }
 
   if (index === 4) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">open full chart</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">updated daily</span></div></div>`;
+    const profileUrl = data?.profile?.spotifyUrl ?? getWidgetProfileUrl() ?? "https://open.spotify.com/";
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Spotify profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
   }
 
   return null;
@@ -140,6 +152,7 @@ export async function GET(request: Request) {
   const mode = url.searchParams.get("mode") ?? "rows";
   const pretty = format !== "min";
   const baseUrl = getWidgetBaseUrl();
+  const data = await getWidgetData();
 
   if (mode === "map") {
     return plainTextResponse(renderImageMapWidget(baseUrl, pretty, true));
@@ -169,7 +182,7 @@ export async function GET(request: Request) {
 
   if (mode.startsWith("split-")) {
     const index = Number(mode.replace("split-", ""));
-    const widget = renderSplitWidget(baseUrl, index);
+    const widget = renderSplitWidget(baseUrl, index, data);
 
     if (widget) {
       return plainTextResponse(widget);
