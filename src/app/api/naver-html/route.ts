@@ -21,10 +21,10 @@ export async function GET(request: Request) {
   const rows = Array.from({ length: 10 }, (_, index) => renderRow(baseUrl, index + 1, pretty));
 
   const html = pretty
-    ? `<div style="width:170px;font-family:Arial,sans-serif;font-size:12px;line-height:1.4;">
+    ? `<div style="width:170px;height:520px;overflow:hidden;font-family:Arial,sans-serif;font-size:12px;line-height:1.4;">
 ${rows.join("<br>\n")}
 </div>`
-    : `<div style="width:170px;font-family:Arial,sans-serif;font-size:12px">${rows.join("<br>")}</div>`;
+    : `<div style="width:170px;height:520px;overflow:hidden;font-family:Arial,sans-serif;font-size:12px">${rows.join("<br>")}</div>`;
 
   return new Response(html, {
     headers: {
