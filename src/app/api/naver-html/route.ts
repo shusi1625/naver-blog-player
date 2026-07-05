@@ -61,12 +61,8 @@ function renderTableImageWidget(baseUrl: string): string {
   return `<table width="170" height="570" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="${baseUrl}/api/widget.svg" width="170" height="570" border="0"></td></tr></table>`;
 }
 
-function renderCompactRow(baseUrl: string, rank: number): string {
-  return `<a href="${baseUrl}/go/${rank}" target="_blank"><img src="${baseUrl}/api/rank/${rank}.svg" width="${COMPACT_WIDTH}" height="${COMPACT_ROW_HEIGHT}" border="0" style="display:block;width:${COMPACT_WIDTH}px;height:${COMPACT_ROW_HEIGHT}px"></a>`;
-}
-
-function renderSpacer(height = COMPACT_GAP): string {
-  return `<div style="height:${height}px;line-height:${height}px;font-size:0"></div>`;
+function renderCompactRow(baseUrl: string, rank: number, marginBottom = "0"): string {
+  return `<a href="${baseUrl}/go/${rank}" target="_blank" style="display:block;text-decoration:none"><img src="${baseUrl}/api/rank/${rank}.svg" width="${COMPACT_WIDTH}" height="${COMPACT_ROW_HEIGHT}" border="0" style="display:block;width:${COMPACT_WIDTH}px;height:${COMPACT_ROW_HEIGHT}px;margin:0 0 ${marginBottom}px 0"></a>`;
 }
 
 function renderPairRow(baseUrl: string, rank: number): string {
@@ -111,19 +107,19 @@ function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
 
 function renderSplitWidget(baseUrl: string, index: number): string | null {
   if (index === 1) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:5px 10px"><b style="font-size:14px;line-height:15px;color:#111">Wavy Top 10</b><br><span style="font-size:9px;color:#777">recent Spotify picks</span></div>${renderSpacer("9")}${renderCompactRow(baseUrl, 1)}${renderSpacer()}${renderCompactRow(baseUrl, 2)}${renderSpacer("2")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:5px 10px"><b style="font-size:14px;line-height:15px;color:#111">Wavy Top 10</b><br><span style="font-size:9px;color:#777">recent Spotify picks</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
 
   if (index === 2) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto">${renderCompactRow(baseUrl, 3)}${renderSpacer()}${renderCompactRow(baseUrl, 4)}${renderSpacer()}${renderCompactRow(baseUrl, 5)}${renderSpacer("1")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
   }
 
   if (index === 3) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto">${renderSpacer("1")}${renderCompactRow(baseUrl, 6)}${renderSpacer()}${renderCompactRow(baseUrl, 7)}${renderSpacer()}${renderCompactRow(baseUrl, 8)}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:1px;box-sizing:border-box">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
   }
 
   if (index === 4) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif">${renderSpacer("2")}${renderCompactRow(baseUrl, 9)}${renderSpacer()}${renderCompactRow(baseUrl, 10)}${renderSpacer("9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:6px 10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="font-size:10px;line-height:12px;color:#1db954;text-decoration:none">open full chart</a><br><span style="font-size:9px;color:#777">updated daily</span></div></div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;padding-top:2px;box-sizing:border-box;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:6px 10px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="font-size:10px;line-height:12px;color:#1db954;text-decoration:none">open full chart</a><br><span style="font-size:9px;color:#777">updated daily</span></div></div>`;
   }
 
   return null;
