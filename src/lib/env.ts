@@ -22,7 +22,7 @@ export function readOptionalEnv(name: string): string | undefined {
 }
 
 export function getWidgetTitle(): string {
-  return readOptionalEnv("WIDGET_TITLE") ?? "Wavy Top 10";
+  return readOptionalEnv("WIDGET_TITLE") ?? "Top 10";
 }
 
 export function getWidgetBaseUrl(): string {

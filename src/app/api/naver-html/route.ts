@@ -7,6 +7,7 @@ const COMPACT_WIDTH = "170";
 const COMPACT_HEIGHT = "150";
 const COMPACT_ROW_HEIGHT = "43";
 const COMPACT_GAP = "10";
+const FULL_WIDGET_HEIGHT = "624";
 const NAVER_BODY_OFFSET = "position:relative;left:-8px;";
 const SPOTIFY_PROFILE_URL = "https://open.spotify.com/user/31exfjrt452lr2qgfqz7wt5245h4?si=99913f921efc4054";
 
@@ -15,20 +16,20 @@ function renderRow(baseUrl: string, rank: number, pretty: boolean): string {
   const src = `${baseUrl}/api/rank/${rank}.svg`;
 
   if (!pretty) {
-    return `<a href="${href}" target="_blank"><img src="${src}" width="170" height="52" border="0"></a>`;
+    return `<a href="${href}" target="_blank"><img src="${src}" width="170" height="${COMPACT_ROW_HEIGHT}" border="0"></a>`;
   }
 
   return `  <a href="${href}" target="_blank">
-    <img src="${src}" width="170" height="52" border="0">
+    <img src="${src}" width="170" height="${COMPACT_ROW_HEIGHT}" border="0">
   </a>`;
 }
 
 function renderImageMapWidget(baseUrl: string, pretty: boolean, withWrapper: boolean): string {
-  const image = `<img src="${baseUrl}/api/widget.svg" width="170" height="570" border="0" usemap="#wavy-top-10">`;
-  const areas = Array.from({ length: 10 }, (_, index) => {
+  const image = `<img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0" usemap="#top-10-map">`;
+  const rowTops = [52, 105, 158, 211, 264, 317, 370, 423, 476, 529];
+  const areas = rowTops.map((top, index) => {
     const rank = index + 1;
-    const top = 54 + index * 48;
-    const bottom = top + 48;
+    const bottom = top + Number(COMPACT_ROW_HEIGHT);
 
     return `<area shape="rect" coords="0,${top},170,${bottom}" href="${baseUrl}/go/${rank}" target="_blank" alt="${rank}">`;
   });
@@ -36,34 +37,34 @@ function renderImageMapWidget(baseUrl: string, pretty: boolean, withWrapper: boo
   if (!withWrapper) {
     return pretty
       ? `${image}
-<map name="wavy-top-10">
+<map name="top-10-map">
   ${areas.join("\n  ")}
 </map>`
-      : `${image}<map name="wavy-top-10">${areas.join("")}</map>`;
+      : `${image}<map name="top-10-map">${areas.join("")}</map>`;
   }
 
   if (!pretty) {
-    return `<div style="width:170px;height:570px;overflow:hidden">${image}<map name="wavy-top-10">${areas.join("")}</map></div>`;
+    return `<div style="width:170px;height:${FULL_WIDGET_HEIGHT}px;overflow:hidden">${image}<map name="top-10-map">${areas.join("")}</map></div>`;
   }
 
-  return `<div style="width:170px;height:570px;overflow:hidden">
+  return `<div style="width:170px;height:${FULL_WIDGET_HEIGHT}px;overflow:hidden">
   ${image}
-  <map name="wavy-top-10">
+  <map name="top-10-map">
     ${areas.join("\n    ")}
   </map>
 </div>`;
 }
 
 function renderImageOnlyWidget(baseUrl: string): string {
-  return `<img src="${baseUrl}/api/widget.svg" width="170" height="570" border="0">`;
+  return `<img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0">`;
 }
 
 function renderLinkedImageWidget(baseUrl: string): string {
-  return `<a href="${baseUrl}/go/1" target="_blank"><img src="${baseUrl}/api/widget.svg" width="170" height="570" border="0"></a>`;
+  return `<a href="${baseUrl}/go/1" target="_blank"><img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0"></a>`;
 }
 
 function renderTableImageWidget(baseUrl: string): string {
-  return `<table width="170" height="570" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="${baseUrl}/api/widget.svg" width="170" height="570" border="0"></td></tr></table>`;
+  return `<table width="170" height="${FULL_WIDGET_HEIGHT}" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0"></td></tr></table>`;
 }
 
 function renderCompactRow(baseUrl: string, rank: number, marginBottom = "0"): string {
@@ -83,7 +84,7 @@ function renderPairRow(baseUrl: string, rank: number): string {
 }
 
 function renderHeaderWidget(): string {
-  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:38px;line-height:38px;font-size:0"></div><div style="height:74px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:12px 12px"><b style="display:block;font-size:17px;line-height:20px;color:#101010">Wavy Top 10</b><span style="display:block;margin-top:4px;font-size:10px;line-height:13px;color:#666">Spotify recent tracks</span><span style="display:block;margin-top:2px;font-size:9px;line-height:12px;color:#1db954">updated daily</span></div><div style="height:38px;line-height:38px;font-size:0"></div></div>`;
+  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:38px;line-height:38px;font-size:0"></div><div style="height:74px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:12px 12px"><b style="display:block;font-size:17px;line-height:20px;color:#101010">Top 10</b><span style="display:block;margin-top:4px;font-size:10px;line-height:13px;color:#666">Spotify recent tracks</span><span style="display:block;margin-top:2px;font-size:9px;line-height:12px;color:#1db954">updated daily</span></div><div style="height:38px;line-height:38px;font-size:0"></div></div>`;
 }
 
 function renderPairWidget(baseUrl: string, firstRank: number): string | null {

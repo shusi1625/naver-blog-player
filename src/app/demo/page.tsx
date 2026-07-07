@@ -5,7 +5,7 @@ import type { TopTrack } from "@/types/widget";
 
 export const dynamic = "force-dynamic";
 
-const WIDGET_WIDTH = 154;
+const WIDGET_WIDTH = 170;
 const WIDGET_HEIGHT = 150;
 const ROW_HEIGHT = 43;
 const ROW_GAP = 10;
@@ -125,6 +125,7 @@ function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack
         gap: 8,
         height: ROW_HEIGHT,
         marginBottom,
+        boxSizing: "border-box",
         overflow: "hidden",
         padding: "4px 6px 4px 4px",
         textDecoration: "none",
@@ -176,7 +177,7 @@ function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack
 function Header() {
   return (
     <div style={{ background: "#121212", boxSizing: "border-box", height: ROW_HEIGHT, padding: "8px 9px", width: WIDGET_WIDTH }}>
-      <strong style={{ color: "#f5f5f5", display: "block", fontSize: 13, lineHeight: "15px" }}>Wavy Top 10</strong>
+      <strong style={{ color: "#f5f5f5", display: "block", fontSize: 13, lineHeight: "15px" }}>Top 10</strong>
       <span style={{ color: "#9b9b9b", display: "block", fontSize: 8.5, lineHeight: "10px", marginTop: 3 }}>
         recent Spotify tracks
       </span>
@@ -236,13 +237,13 @@ export default async function DemoPage() {
       <div style={{ margin: "0 auto", maxWidth: 760 }}>
         <h1 style={{ fontSize: 24, lineHeight: "30px", margin: "0 0 8px" }}>Compact Spotify Widget Demo</h1>
         <p style={{ color: "#555", fontSize: 14, lineHeight: "22px", margin: "0 0 28px" }}>
-          Layout values are locked: row 43px, row gap 10px, widget 154x150px, Naver divider 8px.
+          Layout values are locked: row 43px, row gap 10px, widget 170x150px, Naver divider 8px.
         </p>
 
         <div style={{ alignItems: "flex-start", display: "flex", gap: 40, flexWrap: "wrap" }}>
           <section>
             <h2 style={{ fontSize: 13, letterSpacing: 0, margin: "0 0 10px" }}>Naver stacked preview</h2>
-            <div style={{ background: "#ffffff", border: "1px solid #d8d8d8", padding: 8, width: 172 }}>
+            <div style={{ background: "#ffffff", border: "1px solid #d8d8d8", padding: 8, width: 188 }}>
               <WidgetFrame>
                 <Header />
                 <div style={{ height: 9 }} />

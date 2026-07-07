@@ -55,34 +55,58 @@ ${coverDataUri ? `<image href="${escapeXml(coverDataUri)}" x="4" y="4" width="35
 }
 
 export function renderFullWidgetSvg(data: WidgetData | null): string {
-  const title = escapeXml(truncateText(getWidgetTitle(), 19));
+  const title = escapeXml(truncateText(getWidgetTitle(), 18));
   const updatedAt = data?.updatedAt ? formatKstShort(new Date(data.updatedAt)) : "not updated";
-  const rows = Array.from({ length: 10 }, (_, index) => {
-    const rank = index + 1;
-    const y = 68 + index * 48;
+  const rowHeight = 43;
+  const dividerHeight = 8;
+  const height = 624;
+
+  function renderCompactTrack(rank: number, y: number): string {
     const track = data?.tracks.find((item) => item.rank === rank);
+    const rankLabel = String(rank).padStart(2, "0");
+    const background = rank === 1 ? "#1e1e1e" : "#121212";
+    const titleColor = rank === 1 ? "#1db954" : "#f2f2f2";
+    const artistColor = rank === 1 ? "#f2f2f2" : "#a7a7a7";
 
     if (!track) {
-      return `<rect x="10" y="${y - 16}" width="150" height="34" rx="6" fill="#fbfbf8" stroke="#ece9df"/>
-<text x="18" y="${y + 5}" font-size="10" font-family="${FONT}" font-weight="700" fill="#999999">${String(rank).padStart(2, "0")}</text>
-<text x="42" y="${y + 5}" font-size="10.5" font-family="${FONT}" font-weight="700" fill="#999999">loading...</text>`;
+      return `<rect x="0" y="${y}" width="170" height="${rowHeight}" fill="${background}"/>
+<rect x="4" y="${y + 4}" width="35" height="35" fill="#2a2a2a"/>
+<text x="21.5" y="${y + 25}" text-anchor="middle" font-size="9" font-family="${FONT}" font-weight="700" fill="#777777">${rankLabel}</text>
+<text x="47" y="${y + 17.5}" font-size="10.5" font-family="${FONT}" font-weight="700" fill="#9b9b9b">loading...</text>
+<text x="47" y="${y + 31.5}" font-size="8.5" font-family="${FONT}" fill="#777777">not updated yet</text>`;
     }
 
-    return `<rect x="10" y="${y - 16}" width="150" height="38" rx="6" fill="#fbfbf8" stroke="#ece9df"/>
-<rect x="16" y="${y - 7}" width="20" height="20" rx="10" fill="${rankAccent(rank)}"/>
-<text x="26" y="${y + 6}" text-anchor="middle" font-size="8.8" font-family="${FONT}" font-weight="700" fill="#ffffff">${String(rank).padStart(2, "0")}</text>
-<text x="43" y="${y}" font-size="10.5" font-family="${FONT}" font-weight="700" fill="#1a1a18">${escapeXml(truncateText(track.name, 16))}</text>
-<text x="43" y="${y + 14}" font-size="8.8" font-family="${FONT}" fill="#68645d">${escapeXml(truncateText(joinArtists(track.artists), 19))}</text>`;
-  }).join("\n");
+    return `<rect x="0" y="${y}" width="170" height="${rowHeight}" fill="${background}"/>
+<rect x="4" y="${y + 4}" width="35" height="35" fill="#2a2a2a"/>
+<text x="21.5" y="${y + 25}" text-anchor="middle" font-size="9" font-family="${FONT}" font-weight="700" fill="#777777">${rankLabel}</text>
+<text x="47" y="${y + 17.5}" font-size="10.5" font-family="${FONT}" font-weight="700" fill="${titleColor}">${escapeXml(truncateText(track.name, 21))}</text>
+<text x="47" y="${y + 31.5}" font-size="8.5" font-family="${FONT}" fill="${artistColor}">${escapeXml(truncateText(`${rankLabel} - ${joinArtists(track.artists)}`, 22))}</text>`;
+  }
 
   return svgShell(
     170,
-    570,
-    `<rect width="170" height="570" rx="0" fill="none"/>
-<rect x="10" y="10" width="150" height="42" rx="8" fill="#f7f5ef" stroke="#ece9df"/>
-<text x="20" y="28" font-size="14" font-family="${FONT}" font-weight="700" fill="#111111">${title}</text>
-<text x="20" y="43" font-size="9" font-family="${FONT}" fill="#777777">updated ${escapeXml(updatedAt)}</text>
-${rows}
-<text x="20" y="548" font-size="10" font-family="${FONT}" fill="#1db954">open in Spotify</text>`
+    height,
+    `<rect width="170" height="${height}" fill="#121212"/>
+<rect x="0" y="0" width="170" height="${rowHeight}" fill="#121212"/>
+<circle cx="19.5" cy="21.5" r="15.5" fill="#2a2a2a"/>
+<text x="19.5" y="25" text-anchor="middle" font-size="9" font-family="${FONT}" font-weight="700" fill="#1db954">SP</text>
+<text x="47" y="17" font-size="13" font-family="${FONT}" font-weight="700" fill="#f5f5f5">${title}</text>
+<text x="47" y="31" font-size="8.5" font-family="${FONT}" fill="#9b9b9b">${escapeXml(updatedAt)} updated</text>
+${renderCompactTrack(1, 52)}
+${renderCompactTrack(2, 105)}
+<rect x="0" y="150" width="170" height="${dividerHeight}" fill="#ffffff"/>
+${renderCompactTrack(3, 158)}
+${renderCompactTrack(4, 211)}
+${renderCompactTrack(5, 264)}
+<rect x="0" y="308" width="170" height="${dividerHeight}" fill="#ffffff"/>
+${renderCompactTrack(6, 317)}
+${renderCompactTrack(7, 370)}
+${renderCompactTrack(8, 423)}
+<rect x="0" y="466" width="170" height="${dividerHeight}" fill="#ffffff"/>
+${renderCompactTrack(9, 476)}
+${renderCompactTrack(10, 529)}
+<rect x="0" y="582" width="170" height="${rowHeight}" fill="#121212"/>
+<text x="9" y="599" font-size="10" font-family="${FONT}" font-weight="700" fill="#1db954">Link to profile</text>
+<text x="9" y="613" font-size="8.5" font-family="${FONT}" fill="#9b9b9b">open in Spotify</text>`
   );
 }
