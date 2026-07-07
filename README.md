@@ -62,6 +62,7 @@ WIDGET_BASE_URL=http://127.0.0.1:3000
 WIDGET_TIME_RANGE=short_term
 WIDGET_TITLE=Top 10
 WIDGET_DATA_CACHE_SECONDS=60
+WIDGET_SVG_CACHE_SECONDS=60
 WIDGET_PROFILE_URL=
 WIDGET_PROFILE_IMAGE_URL=
 ```
@@ -77,6 +78,7 @@ WIDGET_PROFILE_IMAGE_URL=
 - `WIDGET_TIME_RANGE`: `short_term`, `medium_term`, `long_term` 중 하나
 - `WIDGET_TITLE`: 위젯 제목
 - `WIDGET_DATA_CACHE_SECONDS`: Redis read를 줄이기 위한 서버 메모리 캐시 TTL
+- `WIDGET_SVG_CACHE_SECONDS`: 브라우저/edge의 SVG 이미지 캐시 TTL
 - `WIDGET_PROFILE_URL`: Spotify 프로필 링크 fallback
 - `WIDGET_PROFILE_IMAGE_URL`: 프로필 이미지 fallback
 

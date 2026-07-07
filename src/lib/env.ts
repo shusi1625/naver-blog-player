@@ -54,6 +54,22 @@ export function getWidgetDataCacheSeconds(): number {
   return seconds;
 }
 
+export function getWidgetSvgCacheSeconds(): number {
+  const value = readOptionalEnv("WIDGET_SVG_CACHE_SECONDS");
+
+  if (!value) {
+    return 60;
+  }
+
+  const seconds = Number(value);
+
+  if (!Number.isFinite(seconds) || seconds < 0) {
+    throw new EnvError("WIDGET_SVG_CACHE_SECONDS must be a non-negative number.");
+  }
+
+  return seconds;
+}
+
 export function getWidgetTimeRange(): TimeRange {
   const value = readOptionalEnv("WIDGET_TIME_RANGE") ?? "short_term";
 
