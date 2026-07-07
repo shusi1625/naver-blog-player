@@ -11,6 +11,9 @@ export default function Home() {
           <a href="/api/widget-data">View widget data</a>
         </li>
         <li>
+          <a href="/admin">Open admin</a>
+        </li>
+        <li>
           <a href="/api/widget.svg">View full SVG</a>
         </li>
         <li>
