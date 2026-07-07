@@ -159,6 +159,7 @@ Place them from top to bottom in the Naver layout. The four widgets should appea
 - `/api/cron/update-top-tracks`: update Top 10 data
 - `/api/widget-data`: inspect stored Top 10 JSON
 - `/api/widget.svg`: full SVG preview
+- `/api/header.svg`: dynamic widget header SVG
 - `/api/rank/[rank].svg`: rank row SVG
 - `/api/cover/[rank]`: rank cover image proxy
 - `/api/profile-image`: profile image proxy

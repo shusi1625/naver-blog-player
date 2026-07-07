@@ -13,6 +13,22 @@ function rankAccent(rank: number): string {
   return rank === 1 ? "#1db954" : "#a7a7a7";
 }
 
+export function renderHeaderSvg(data: WidgetData | null, profileDataUri?: string | null): string {
+  const title = escapeXml(truncateText(getWidgetTitle(), 18));
+  const updatedAt = data?.updatedAt ? formatKstShort(new Date(data.updatedAt)) : "not updated";
+
+  return svgShell(
+    170,
+    43,
+    `<rect width="170" height="43" fill="#121212"/>
+<clipPath id="profile"><rect x="4" y="6" width="31" height="31" rx="15.5"/></clipPath>
+<circle cx="19.5" cy="21.5" r="15.5" fill="#2a2a2a"/>
+${profileDataUri ? `<image href="${escapeXml(profileDataUri)}" x="4" y="6" width="31" height="31" preserveAspectRatio="xMidYMid slice" clip-path="url(#profile)"/>` : `<circle cx="19.5" cy="18" r="5.4" fill="#777777"/><path d="M9 35c1.6-5.7 5.3-8.8 10.5-8.8S28.4 29.3 30 35" fill="#777777"/>`}
+<text x="47" y="17" font-size="13" font-family="${FONT}" font-weight="700" fill="#f5f5f5">${title}</text>
+<text x="47" y="31" font-size="8.5" font-family="${FONT}" fill="#9b9b9b">${escapeXml(updatedAt)} updated</text>`
+  );
+}
+
 export function renderRankSvg(data: WidgetData | null, rank: number, coverDataUri?: string | null): string {
   const safeRank = Number.isInteger(rank) && rank >= 1 && rank <= 10 ? rank : 1;
   const track = data?.tracks.find((item) => item.rank === safeRank);
