@@ -1,10 +1,11 @@
 import { Redis } from "@upstash/redis";
 import type { WidgetData } from "@/types/widget";
-import { readOptionalEnv } from "@/lib/env";
+import { getWidgetDataCacheSeconds, readOptionalEnv } from "@/lib/env";
 
 const WIDGET_KEY = "widget:top-tracks";
 
 let memoryData: WidgetData | null = null;
+let memoryDataExpiresAt = 0;
 let redisClient: Redis | null | undefined;
 
 function getRedis(): Redis | null {
@@ -26,7 +27,15 @@ export async function getWidgetData(): Promise<WidgetData | null> {
     return memoryData;
   }
 
-  return redis.get<WidgetData>(WIDGET_KEY);
+  if (memoryData && Date.now() < memoryDataExpiresAt) {
+    return memoryData;
+  }
+
+  const data = await redis.get<WidgetData>(WIDGET_KEY);
+  memoryData = data;
+  memoryDataExpiresAt = Date.now() + getWidgetDataCacheSeconds() * 1000;
+
+  return data;
 }
 
 export async function setWidgetData(data: WidgetData): Promise<void> {
@@ -34,8 +43,11 @@ export async function setWidgetData(data: WidgetData): Promise<void> {
 
   if (!redis) {
     memoryData = data;
+    memoryDataExpiresAt = Number.POSITIVE_INFINITY;
     return;
   }
 
   await redis.set(WIDGET_KEY, data);
+  memoryData = data;
+  memoryDataExpiresAt = Date.now() + getWidgetDataCacheSeconds() * 1000;
 }

@@ -38,6 +38,22 @@ export function getWidgetProfileUrl(): string | undefined {
   return readOptionalEnv("WIDGET_PROFILE_URL");
 }
 
+export function getWidgetDataCacheSeconds(): number {
+  const value = readOptionalEnv("WIDGET_DATA_CACHE_SECONDS");
+
+  if (!value) {
+    return 60;
+  }
+
+  const seconds = Number(value);
+
+  if (!Number.isFinite(seconds) || seconds < 0) {
+    throw new EnvError("WIDGET_DATA_CACHE_SECONDS must be a non-negative number.");
+  }
+
+  return seconds;
+}
+
 export function getWidgetTimeRange(): TimeRange {
   const value = readOptionalEnv("WIDGET_TIME_RANGE") ?? "short_term";
 
