@@ -1,7 +1,8 @@
+import { formatKstShort } from "@/lib/date";
 import { getWidgetData } from "@/lib/storage";
 import { joinArtists, truncateText } from "@/lib/text";
 import type { ReactNode } from "react";
-import type { TopTrack } from "@/types/widget";
+import type { TopTrack, WidgetData } from "@/types/widget";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,7 @@ const ROW_HEIGHT = 43;
 const ROW_GAP = 10;
 const DIVIDER_HEIGHT = 8;
 const SPOTIFY_GREEN = "#1db954";
+const SPOTIFY_PROFILE_URL = "https://open.spotify.com/user/31exfjrt452lr2qgfqz7wt5245h4?si=99913f921efc4054";
 
 const sampleTracks: TopTrack[] = [
   {
@@ -109,6 +111,14 @@ function getTrack(tracks: TopTrack[], rank: number): TopTrack {
   return tracks.find((track) => track.rank === rank) ?? sampleTracks[rank - 1];
 }
 
+function getUpdatedLabel(data: WidgetData | null): string {
+  if (!data?.updatedAt) {
+    return "not updated";
+  }
+
+  return `${formatKstShort(new Date(data.updatedAt))} updated`;
+}
+
 function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack; active?: boolean; marginBottom?: number }) {
   const title = truncateText(track.name, 18);
   const artists = truncateText(joinArtists(track.artists), 19);
@@ -174,29 +184,44 @@ function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack
   );
 }
 
-function Header() {
+function Header({ data }: { data: WidgetData | null }) {
+  const profileImageUrl = data?.profile?.imageUrl ?? "/api/profile-image";
+
   return (
-    <div style={{ background: "#121212", boxSizing: "border-box", height: ROW_HEIGHT, padding: "8px 9px", width: WIDGET_WIDTH }}>
-      <strong style={{ color: "#f5f5f5", display: "block", fontSize: 13, lineHeight: "15px" }}>Top 10</strong>
-      <span style={{ color: "#9b9b9b", display: "block", fontSize: 8.5, lineHeight: "10px", marginTop: 3 }}>
-        recent Spotify tracks
+    <div style={{ background: "#121212", boxSizing: "border-box", height: ROW_HEIGHT, width: WIDGET_WIDTH }}>
+      <span
+        style={{
+          background: `#2a2a2a url("${profileImageUrl}") center / cover no-repeat`,
+          borderRadius: 16,
+          display: "block",
+          float: "left",
+          height: 31,
+          margin: "6px 8px 0 4px",
+          width: 31
+        }}
+      />
+      <strong style={{ color: "#f5f5f5", display: "block", fontSize: 13, lineHeight: "15px", paddingTop: 7 }}>Top 10</strong>
+      <span style={{ color: "#9b9b9b", display: "block", fontSize: 8.5, lineHeight: "10px", marginTop: 2 }}>
+        {getUpdatedLabel(data)}
       </span>
     </div>
   );
 }
 
-function Footer() {
+function Footer({ data }: { data: WidgetData | null }) {
+  const profileUrl = data?.profile?.spotifyUrl ?? SPOTIFY_PROFILE_URL;
+
   return (
     <div style={{ background: "#121212", boxSizing: "border-box", height: ROW_HEIGHT, padding: "7px 9px", width: WIDGET_WIDTH }}>
       <a
-        href="/api/widget.svg"
+        href={profileUrl}
         target="_blank"
         style={{ color: SPOTIFY_GREEN, display: "block", fontSize: 10, fontWeight: 700, lineHeight: "13px", textDecoration: "none" }}
       >
-        open full chart
+        Link to profile
       </a>
       <span style={{ color: "#9b9b9b", display: "block", fontSize: 8.5, lineHeight: "10px", marginTop: 3 }}>
-        updated daily
+        open in Spotify
       </span>
     </div>
   );
@@ -245,7 +270,7 @@ export default async function DemoPage() {
             <h2 style={{ fontSize: 13, letterSpacing: 0, margin: "0 0 10px" }}>Naver stacked preview</h2>
             <div style={{ background: "#ffffff", border: "1px solid #d8d8d8", padding: 8, width: 188 }}>
               <WidgetFrame>
-                <Header />
+                <Header data={data} />
                 <div style={{ height: 9 }} />
                 <TrackRow active track={getTrack(tracks, 1)} marginBottom={ROW_GAP} />
                 <TrackRow track={getTrack(tracks, 2)} marginBottom={2} />
@@ -266,7 +291,7 @@ export default async function DemoPage() {
               <WidgetFrame paddingTop={2}>
                 <TrackRow track={getTrack(tracks, 9)} marginBottom={ROW_GAP} />
                 <TrackRow track={getTrack(tracks, 10)} marginBottom={9} />
-                <Footer />
+                <Footer data={data} />
               </WidgetFrame>
             </div>
           </section>
