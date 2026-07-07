@@ -7,64 +7,21 @@ const COMPACT_WIDTH = "170";
 const COMPACT_HEIGHT = "150";
 const COMPACT_ROW_HEIGHT = "43";
 const COMPACT_GAP = "10";
-const FULL_WIDGET_HEIGHT = "624";
 const NAVER_BODY_OFFSET = "position:relative;left:-8px;";
 const SPOTIFY_PROFILE_URL = "https://open.spotify.com/user/31exfjrt452lr2qgfqz7wt5245h4?si=99913f921efc4054";
 
-function renderRow(baseUrl: string, rank: number, pretty: boolean): string {
-  const href = `${baseUrl}/go/${rank}`;
-  const src = `${baseUrl}/api/rank/${rank}.svg`;
+type WidgetCode = {
+  label: string;
+  description: string;
+  html: string;
+};
 
-  if (!pretty) {
-    return `<a href="${href}" target="_blank"><img src="${src}" width="170" height="${COMPACT_ROW_HEIGHT}" border="0"></a>`;
-  }
-
-  return `  <a href="${href}" target="_blank">
-    <img src="${src}" width="170" height="${COMPACT_ROW_HEIGHT}" border="0">
-  </a>`;
-}
-
-function renderImageMapWidget(baseUrl: string, pretty: boolean, withWrapper: boolean): string {
-  const image = `<img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0" usemap="#top-10-map">`;
-  const rowTops = [52, 105, 158, 211, 264, 317, 370, 423, 476, 529];
-  const areas = rowTops.map((top, index) => {
-    const rank = index + 1;
-    const bottom = top + Number(COMPACT_ROW_HEIGHT);
-
-    return `<area shape="rect" coords="0,${top},170,${bottom}" href="${baseUrl}/go/${rank}" target="_blank" alt="${rank}">`;
-  });
-
-  if (!withWrapper) {
-    return pretty
-      ? `${image}
-<map name="top-10-map">
-  ${areas.join("\n  ")}
-</map>`
-      : `${image}<map name="top-10-map">${areas.join("")}</map>`;
-  }
-
-  if (!pretty) {
-    return `<div style="width:170px;height:${FULL_WIDGET_HEIGHT}px;overflow:hidden">${image}<map name="top-10-map">${areas.join("")}</map></div>`;
-  }
-
-  return `<div style="width:170px;height:${FULL_WIDGET_HEIGHT}px;overflow:hidden">
-  ${image}
-  <map name="top-10-map">
-    ${areas.join("\n    ")}
-  </map>
-</div>`;
-}
-
-function renderImageOnlyWidget(baseUrl: string): string {
-  return `<img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0">`;
-}
-
-function renderLinkedImageWidget(baseUrl: string): string {
-  return `<a href="${baseUrl}/go/1" target="_blank"><img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0"></a>`;
-}
-
-function renderTableImageWidget(baseUrl: string): string {
-  return `<table width="170" height="${FULL_WIDGET_HEIGHT}" border="0" cellpadding="0" cellspacing="0"><tr><td><img src="${baseUrl}/api/widget.svg" width="170" height="${FULL_WIDGET_HEIGHT}" border="0"></td></tr></table>`;
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
 }
 
 function renderCompactRow(baseUrl: string, rank: number, marginBottom = "0"): string {
@@ -79,47 +36,7 @@ function getUpdatedLabel(data: WidgetData | null): string {
   return `${formatKstShort(new Date(data.updatedAt))} updated`;
 }
 
-function renderPairRow(baseUrl: string, rank: number): string {
-  return `<a href="${baseUrl}/go/${rank}" target="_blank"><img src="${baseUrl}/api/rank/${rank}.svg" width="154" height="47" border="0" style="display:block;width:154px;height:47px"></a>`;
-}
-
-function renderHeaderWidget(): string {
-  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:38px;line-height:38px;font-size:0"></div><div style="height:74px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:12px 12px"><b style="display:block;font-size:17px;line-height:20px;color:#101010">Top 10</b><span style="display:block;margin-top:4px;font-size:10px;line-height:13px;color:#666">Spotify recent tracks</span><span style="display:block;margin-top:2px;font-size:9px;line-height:12px;color:#1db954">updated daily</span></div><div style="height:38px;line-height:38px;font-size:0"></div></div>`;
-}
-
-function renderPairWidget(baseUrl: string, firstRank: number): string | null {
-  if (firstRank < 1 || firstRank > 9 || firstRank % 2 === 0) {
-    return null;
-  }
-
-  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto"><div style="height:24px;line-height:24px;font-size:0"></div>${renderPairRow(baseUrl, firstRank)}<div style="height:8px;line-height:8px;font-size:0"></div>${renderPairRow(baseUrl, firstRank + 1)}<div style="height:24px;line-height:24px;font-size:0"></div></div>`;
-}
-
-function renderFooterWidget(baseUrl: string): string {
-  return `<div style="width:154px;height:150px;overflow:hidden;margin:0 auto;font-family:Arial,sans-serif"><div style="height:38px;line-height:38px;font-size:0"></div><div style="height:74px;background:#f7f5ef;border:1px solid #ece9df;box-sizing:border-box;padding:13px 12px"><a href="${baseUrl}/api/widget.svg" target="_blank" style="display:block;font-size:13px;line-height:16px;color:#1db954;text-decoration:none;font-weight:bold">open full chart</a><span style="display:block;margin-top:5px;font-size:10px;line-height:13px;color:#666">click each track to Spotify</span><span style="display:block;margin-top:2px;font-size:9px;line-height:12px;color:#888">short term ranking</span></div><div style="height:38px;line-height:38px;font-size:0"></div></div>`;
-}
-
-function renderSevenPartWidget(baseUrl: string, mode: string): string | null {
-  if (mode === "header") {
-    return renderHeaderWidget();
-  }
-
-  if (mode === "footer") {
-    return renderFooterWidget(baseUrl);
-  }
-
-  if (mode.startsWith("pair-")) {
-    const [first, second] = mode.replace("pair-", "").split("-").map(Number);
-
-    if (second === first + 1) {
-      return renderPairWidget(baseUrl, first);
-    }
-  }
-
-  return null;
-}
-
-function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | null): string | null {
+function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | null): string {
   if (index === 1) {
     return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:#121212;font-family:Arial,sans-serif"><div style="height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0;background:#121212;box-sizing:border-box"><img src="${baseUrl}/api/profile-image" width="31" height="31" border="0" style="display:block;float:left;width:31px;height:31px;margin:6px 8px 0 4px;border-radius:16px"><b style="display:block;padding-top:7px;font-size:13px;line-height:15px;color:#f5f5f5;letter-spacing:0">Top 10</b><span style="display:block;margin-top:2px;font-size:8.5px;line-height:10px;color:#9b9b9b">${getUpdatedLabel(data)}</span></div>${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
@@ -132,73 +49,110 @@ function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | nu
     return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:1px;box-sizing:border-box;background:#121212">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
   }
 
-  if (index === 4) {
-    const profileUrl = SPOTIFY_PROFILE_URL;
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
-  }
-
-  return null;
+  const profileUrl = data?.profile?.spotifyUrl ?? SPOTIFY_PROFILE_URL;
+  return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
 }
 
-function plainTextResponse(html: string): Response {
-  return new Response(html, {
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      "Cache-Control": "no-store"
+function buildWidgetCodes(baseUrl: string, data: WidgetData | null): WidgetCode[] {
+  return [
+    {
+      label: "Widget 1",
+      description: "Header, rank 1-2",
+      html: renderSplitWidget(baseUrl, 1, data)
+    },
+    {
+      label: "Widget 2",
+      description: "Rank 3-5",
+      html: renderSplitWidget(baseUrl, 2, data)
+    },
+    {
+      label: "Widget 3",
+      description: "Rank 6-8",
+      html: renderSplitWidget(baseUrl, 3, data)
+    },
+    {
+      label: "Widget 4",
+      description: "Rank 9-10, profile link",
+      html: renderSplitWidget(baseUrl, 4, data)
     }
-  });
+  ];
 }
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const format = url.searchParams.get("format") ?? "pretty";
-  const mode = url.searchParams.get("mode") ?? "rows";
-  const pretty = format !== "min";
+function htmlResponse(codes: WidgetCode[], updatedAtKst?: string | null): Response {
+  const cards = codes
+    .map(
+      (code, index) => `<section class="card">
+        <div class="card-head">
+          <div>
+            <h2>${escapeHtml(code.label)}</h2>
+            <p>${escapeHtml(code.description)}</p>
+          </div>
+          <button type="button" data-copy-target="code-${index + 1}">Copy</button>
+        </div>
+        <textarea id="code-${index + 1}" readonly spellcheck="false">${escapeHtml(code.html)}</textarea>
+      </section>`
+    )
+    .join("");
+
+  return new Response(
+    `<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Naver Widget HTML</title>
+  <style>
+    body{margin:0;background:#f5f5f2;color:#111;font-family:Arial,sans-serif}
+    main{max-width:920px;margin:0 auto;padding:36px 20px}
+    h1{font-size:28px;line-height:34px;margin:0 0 8px}
+    .lead{color:#555;font-size:14px;line-height:22px;margin:0 0 24px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+    .card{background:#fff;border:1px solid #dcdcd8;padding:14px}
+    .card-head{align-items:flex-start;display:flex;gap:12px;justify-content:space-between;margin-bottom:10px}
+    h2{font-size:15px;line-height:20px;margin:0}
+    p{color:#666;font-size:12px;line-height:18px;margin:2px 0 0}
+    button{background:#1db954;border:0;color:#07130b;cursor:pointer;font-size:13px;font-weight:700;height:34px;padding:0 14px}
+    button.copied{background:#111;color:#fff}
+    textarea{box-sizing:border-box;border:1px solid #d8d8d8;font-family:Consolas,monospace;font-size:12px;height:170px;line-height:17px;padding:10px;resize:vertical;width:100%}
+    .hint{color:#666;font-size:12px;line-height:18px;margin-top:18px}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Naver Widget HTML</h1>
+    <p class="lead">Copy these four snippets into Naver Blog widgets in order. Last data update: ${escapeHtml(updatedAtKst ?? "not updated")}</p>
+    <div class="grid">${cards}</div>
+    <p class="hint">Use Widget 1, 2, 3, 4 from top to bottom in the Naver layout.</p>
+  </main>
+  <script>
+    document.querySelectorAll("button[data-copy-target]").forEach((button) => {
+      button.addEventListener("click", async () => {
+        const target = document.getElementById(button.dataset.copyTarget);
+        await navigator.clipboard.writeText(target.value);
+        button.textContent = "Copied";
+        button.classList.add("copied");
+        setTimeout(() => {
+          button.textContent = "Copy";
+          button.classList.remove("copied");
+        }, 1200);
+      });
+    });
+  </script>
+</body>
+</html>`,
+    {
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Type": "text/html; charset=utf-8"
+      }
+    }
+  );
+}
+
+export async function GET() {
   const baseUrl = getWidgetBaseUrl();
   const data = await getWidgetData();
+  const codes = buildWidgetCodes(baseUrl, data);
 
-  if (mode === "map") {
-    return plainTextResponse(renderImageMapWidget(baseUrl, pretty, true));
-  }
-
-  if (mode === "map-bare") {
-    return plainTextResponse(renderImageMapWidget(baseUrl, pretty, false));
-  }
-
-  if (mode === "image") {
-    return plainTextResponse(renderImageOnlyWidget(baseUrl));
-  }
-
-  if (mode === "linked-image") {
-    return plainTextResponse(renderLinkedImageWidget(baseUrl));
-  }
-
-  if (mode === "table-image") {
-    return plainTextResponse(renderTableImageWidget(baseUrl));
-  }
-
-  const sevenPartWidget = renderSevenPartWidget(baseUrl, mode);
-
-  if (sevenPartWidget) {
-    return plainTextResponse(sevenPartWidget);
-  }
-
-  if (mode.startsWith("split-")) {
-    const index = Number(mode.replace("split-", ""));
-    const widget = renderSplitWidget(baseUrl, index, data);
-
-    if (widget) {
-      return plainTextResponse(widget);
-    }
-  }
-
-  const rows = Array.from({ length: 10 }, (_, index) => renderRow(baseUrl, index + 1, pretty));
-
-  const html = pretty
-    ? `<div style="width:170px;height:520px;overflow:hidden;font-family:Arial,sans-serif;font-size:12px;line-height:1.4;">
-${rows.join("<br>\n")}
-</div>`
-    : `<div style="width:170px;height:520px;overflow:hidden;font-family:Arial,sans-serif;font-size:12px">${rows.join("<br>")}</div>`;
-
-  return plainTextResponse(html);
+  return htmlResponse(codes, data?.updatedAtKst ?? null);
 }

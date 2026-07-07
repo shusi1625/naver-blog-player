@@ -20,7 +20,7 @@ export default function Home() {
           <a href="/demo">View design demo</a>
         </li>
         <li>
-          <a href="/api/naver-html?format=min">Get Naver widget HTML</a>
+          <a href="/api/naver-html">Get Naver widget HTML</a>
         </li>
       </ul>
     </main>
