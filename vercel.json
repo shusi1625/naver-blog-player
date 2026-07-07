@@ -2,10 +2,6 @@
   "crons": [
     {
       "path": "/api/cron/update-top-tracks",
-      "schedule": "0 9 * * *"
-    },
-    {
-      "path": "/api/cron/update-top-tracks",
       "schedule": "0 15 * * *"
     }
   ]
