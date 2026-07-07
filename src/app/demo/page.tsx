@@ -1,4 +1,5 @@
 import { formatKstShort } from "@/lib/date";
+import { getWidgetBackgroundColor, getWidgetTitle } from "@/lib/env";
 import { getWidgetData } from "@/lib/storage";
 import { joinArtists, truncateText } from "@/lib/text";
 import type { ReactNode } from "react";
@@ -119,7 +120,17 @@ function getUpdatedLabel(data: WidgetData | null): string {
   return `${formatKstShort(new Date(data.updatedAt))} updated`;
 }
 
-function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack; active?: boolean; marginBottom?: number }) {
+function TrackRow({
+  track,
+  backgroundColor,
+  active = false,
+  marginBottom = 0
+}: {
+  track: TopTrack;
+  backgroundColor: string;
+  active?: boolean;
+  marginBottom?: number;
+}) {
   const title = truncateText(track.name, 18);
   const artists = truncateText(joinArtists(track.artists), 19);
 
@@ -129,7 +140,7 @@ function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack
       target="_blank"
       style={{
         alignItems: "center",
-        background: active ? "#1e1e1e" : "#121212",
+        background: active ? "#1e1e1e" : backgroundColor,
         color: "#f2f2f2",
         display: "flex",
         gap: 8,
@@ -184,11 +195,12 @@ function TrackRow({ track, active = false, marginBottom = 0 }: { track: TopTrack
   );
 }
 
-function Header({ data }: { data: WidgetData | null }) {
+function Header({ data, backgroundColor }: { data: WidgetData | null; backgroundColor: string }) {
   const profileImageUrl = data?.profile?.imageUrl ?? "/api/profile-image";
+  const widgetTitle = getWidgetTitle();
 
   return (
-    <div style={{ background: "#121212", boxSizing: "border-box", height: ROW_HEIGHT, width: WIDGET_WIDTH }}>
+    <div style={{ background: backgroundColor, boxSizing: "border-box", height: ROW_HEIGHT, width: WIDGET_WIDTH }}>
       <span
         style={{
           background: `#2a2a2a url("${profileImageUrl}") center / cover no-repeat`,
@@ -200,7 +212,9 @@ function Header({ data }: { data: WidgetData | null }) {
           width: 31
         }}
       />
-      <strong style={{ color: "#f5f5f5", display: "block", fontSize: 13, lineHeight: "15px", paddingTop: 7 }}>Top 10</strong>
+      <strong style={{ color: "#f5f5f5", display: "block", fontSize: 13, lineHeight: "15px", paddingTop: 7 }}>
+        {widgetTitle}
+      </strong>
       <span style={{ color: "#9b9b9b", display: "block", fontSize: 8.5, lineHeight: "10px", marginTop: 2 }}>
         {getUpdatedLabel(data)}
       </span>
@@ -208,11 +222,11 @@ function Header({ data }: { data: WidgetData | null }) {
   );
 }
 
-function Footer({ data }: { data: WidgetData | null }) {
+function Footer({ data, backgroundColor }: { data: WidgetData | null; backgroundColor: string }) {
   const profileUrl = data?.profile?.spotifyUrl ?? SPOTIFY_PROFILE_URL;
 
   return (
-    <div style={{ background: "#121212", boxSizing: "border-box", height: ROW_HEIGHT, padding: "7px 9px", width: WIDGET_WIDTH }}>
+    <div style={{ background: backgroundColor, boxSizing: "border-box", height: ROW_HEIGHT, padding: "7px 9px", width: WIDGET_WIDTH }}>
       <a
         href={profileUrl}
         target="_blank"
@@ -227,11 +241,11 @@ function Footer({ data }: { data: WidgetData | null }) {
   );
 }
 
-function WidgetFrame({ children, paddingTop = 0 }: { children: ReactNode; paddingTop?: number }) {
+function WidgetFrame({ children, backgroundColor, paddingTop = 0 }: { children: ReactNode; backgroundColor: string; paddingTop?: number }) {
   return (
     <div
       style={{
-        background: "#121212",
+        background: backgroundColor,
         boxSizing: "border-box",
         fontFamily: "Arial, sans-serif",
         height: WIDGET_HEIGHT,
@@ -248,6 +262,7 @@ function WidgetFrame({ children, paddingTop = 0 }: { children: ReactNode; paddin
 export default async function DemoPage() {
   const data = await getWidgetData();
   const tracks = data?.tracks?.length ? data.tracks : sampleTracks;
+  const backgroundColor = getWidgetBackgroundColor();
 
   return (
     <main
@@ -269,29 +284,29 @@ export default async function DemoPage() {
           <section>
             <h2 style={{ fontSize: 13, letterSpacing: 0, margin: "0 0 10px" }}>Naver stacked preview</h2>
             <div style={{ background: "#ffffff", border: "1px solid #d8d8d8", padding: 8, width: 188 }}>
-              <WidgetFrame>
-                <Header data={data} />
+              <WidgetFrame backgroundColor={backgroundColor}>
+                <Header data={data} backgroundColor={backgroundColor} />
                 <div style={{ height: 9 }} />
-                <TrackRow active track={getTrack(tracks, 1)} marginBottom={ROW_GAP} />
-                <TrackRow track={getTrack(tracks, 2)} marginBottom={2} />
+                <TrackRow active track={getTrack(tracks, 1)} backgroundColor={backgroundColor} marginBottom={ROW_GAP} />
+                <TrackRow track={getTrack(tracks, 2)} backgroundColor={backgroundColor} marginBottom={2} />
               </WidgetFrame>
               <div style={{ height: DIVIDER_HEIGHT }} />
-              <WidgetFrame>
-                <TrackRow track={getTrack(tracks, 3)} marginBottom={ROW_GAP} />
-                <TrackRow track={getTrack(tracks, 4)} marginBottom={ROW_GAP} />
-                <TrackRow track={getTrack(tracks, 5)} marginBottom={1} />
+              <WidgetFrame backgroundColor={backgroundColor}>
+                <TrackRow track={getTrack(tracks, 3)} backgroundColor={backgroundColor} marginBottom={ROW_GAP} />
+                <TrackRow track={getTrack(tracks, 4)} backgroundColor={backgroundColor} marginBottom={ROW_GAP} />
+                <TrackRow track={getTrack(tracks, 5)} backgroundColor={backgroundColor} marginBottom={1} />
               </WidgetFrame>
               <div style={{ height: DIVIDER_HEIGHT }} />
-              <WidgetFrame paddingTop={1}>
-                <TrackRow track={getTrack(tracks, 6)} marginBottom={ROW_GAP} />
-                <TrackRow track={getTrack(tracks, 7)} marginBottom={ROW_GAP} />
-                <TrackRow track={getTrack(tracks, 8)} />
+              <WidgetFrame backgroundColor={backgroundColor} paddingTop={1}>
+                <TrackRow track={getTrack(tracks, 6)} backgroundColor={backgroundColor} marginBottom={ROW_GAP} />
+                <TrackRow track={getTrack(tracks, 7)} backgroundColor={backgroundColor} marginBottom={ROW_GAP} />
+                <TrackRow track={getTrack(tracks, 8)} backgroundColor={backgroundColor} />
               </WidgetFrame>
               <div style={{ height: DIVIDER_HEIGHT }} />
-              <WidgetFrame paddingTop={2}>
-                <TrackRow track={getTrack(tracks, 9)} marginBottom={ROW_GAP} />
-                <TrackRow track={getTrack(tracks, 10)} marginBottom={9} />
-                <Footer data={data} />
+              <WidgetFrame backgroundColor={backgroundColor} paddingTop={2}>
+                <TrackRow track={getTrack(tracks, 9)} backgroundColor={backgroundColor} marginBottom={ROW_GAP} />
+                <TrackRow track={getTrack(tracks, 10)} backgroundColor={backgroundColor} marginBottom={9} />
+                <Footer data={data} backgroundColor={backgroundColor} />
               </WidgetFrame>
             </div>
           </section>
@@ -304,7 +319,7 @@ export default async function DemoPage() {
                 already stored in Redis.
               </p>
               <ul style={{ color: "#555", fontSize: 13, lineHeight: "22px", margin: 0, paddingLeft: 18 }}>
-                <li>Background: #121212</li>
+                <li>Background: {backgroundColor}</li>
                 <li>Active title: Spotify green</li>
                 <li>Rows use real album image URLs when available</li>
                 <li>Widget sizing and spacing are unchanged</li>

@@ -25,6 +25,16 @@ export function getWidgetTitle(): string {
   return readOptionalEnv("WIDGET_TITLE") ?? "Top 10";
 }
 
+export function getWidgetBackgroundColor(): string {
+  const value = readOptionalEnv("WIDGET_BACKGROUND_COLOR") ?? "#121212";
+
+  if (!/^#[0-9a-fA-F]{6}$/.test(value)) {
+    throw new EnvError("WIDGET_BACKGROUND_COLOR must be a 6-digit hex color like #121212.");
+  }
+
+  return value;
+}
+
 export function getWidgetBaseUrl(): string {
   const value = readRequiredEnv("WIDGET_BASE_URL");
   return value.replace(/\/+$/, "");

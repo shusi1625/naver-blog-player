@@ -52,6 +52,7 @@ CRON_SECRET=
 WIDGET_BASE_URL=http://127.0.0.1:3000
 WIDGET_TIME_RANGE=short_term
 WIDGET_TITLE=Top 10
+WIDGET_BACKGROUND_COLOR=#121212
 WIDGET_DATA_CACHE_SECONDS=60
 WIDGET_SVG_CACHE_SECONDS=60
 WIDGET_PROFILE_URL=
@@ -67,6 +68,8 @@ Key values:
 - `CRON_SECRET`: secret for cron/manual updates
 - `WIDGET_BASE_URL`: deployed site URL
 - `WIDGET_TIME_RANGE`: `short_term`, `medium_term`, or `long_term`
+- `WIDGET_TITLE`: widget title shown in the header
+- `WIDGET_BACKGROUND_COLOR`: widget background color, also used for the Naver group box color
 - `WIDGET_DATA_CACHE_SECONDS`: in-memory server cache TTL for Redis reads
 - `WIDGET_SVG_CACHE_SECONDS`: browser/edge cache TTL for SVG images
 
@@ -148,6 +151,32 @@ Copy the four snippets with the copy buttons, then create four Naver Blog custom
 4. Widget 4: rank 9-10, profile link
 
 Place them from top to bottom in the Naver layout. The four widgets should appear as one stacked player.
+
+To make the four separate Naver widgets look like one player, set the Naver group box color to the same value as `WIDGET_BACKGROUND_COLOR`:
+
+```text
+Blog Admin > Customize Settings > Detailed Design Settings > Group Box
+블로그 관리 > 꾸미기 설정 > 세부 디자인 설정 > 그룹 박스
+```
+
+Default widget color:
+
+```text
+#121212
+```
+
+Use a dark color unless you also adjust the text colors in code.
+
+## Customizing The Widget
+
+For now, the fastest customization path is environment variables:
+
+- `WIDGET_TITLE`: header title, for example `Top 10`
+- `WIDGET_BACKGROUND_COLOR`: main widget background, for example `#121212`
+
+These values are not secrets. They live in env because this project is currently a single-owner deployment: changing Vercel env values is easier than editing source files, and it keeps the generated widget snippets consistent across SVG routes, demo, and Naver copy page.
+
+If the widget becomes a shared multi-user service later, move these values into a small settings screen backed by Redis or a database. That would let each user customize title/color without touching Vercel or redeploying.
 
 ## Routes
 

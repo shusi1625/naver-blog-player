@@ -1,6 +1,6 @@
 import { formatKstShort } from "@/lib/date";
 import { escapeXml, joinArtists, truncateText } from "@/lib/text";
-import { getWidgetTitle } from "@/lib/env";
+import { getWidgetBackgroundColor, getWidgetTitle } from "@/lib/env";
 import type { WidgetData } from "@/types/widget";
 
 const FONT = "Arial, sans-serif";
@@ -16,11 +16,12 @@ function rankAccent(rank: number): string {
 export function renderHeaderSvg(data: WidgetData | null, profileDataUri?: string | null): string {
   const title = escapeXml(truncateText(getWidgetTitle(), 18));
   const updatedAt = data?.updatedAt ? formatKstShort(new Date(data.updatedAt)) : "not updated";
+  const widgetBackground = getWidgetBackgroundColor();
 
   return svgShell(
     170,
     43,
-    `<rect width="170" height="43" fill="#121212"/>
+    `<rect width="170" height="43" fill="${widgetBackground}"/>
 <clipPath id="profile"><rect x="4" y="6" width="31" height="31" rx="15.5"/></clipPath>
 <circle cx="19.5" cy="21.5" r="15.5" fill="#2a2a2a"/>
 ${profileDataUri ? `<image href="${escapeXml(profileDataUri)}" x="4" y="6" width="31" height="31" preserveAspectRatio="xMidYMid slice" clip-path="url(#profile)"/>` : `<circle cx="19.5" cy="18" r="5.4" fill="#777777"/><path d="M9 35c1.6-5.7 5.3-8.8 10.5-8.8S28.4 29.3 30 35" fill="#777777"/>`}
@@ -34,9 +35,10 @@ export function renderRankSvg(data: WidgetData | null, rank: number, coverDataUr
   const track = data?.tracks.find((item) => item.rank === safeRank);
   const rankLabel = String(safeRank).padStart(2, "0");
   const accent = rankAccent(safeRank);
+  const widgetBackground = getWidgetBackgroundColor();
 
   if (!track) {
-    const background = safeRank === 1 ? "#1e1e1e" : "#121212";
+    const background = safeRank === 1 ? "#1e1e1e" : widgetBackground;
 
     return svgShell(
       170,
@@ -52,7 +54,7 @@ export function renderRankSvg(data: WidgetData | null, rank: number, coverDataUr
 
   const title = escapeXml(truncateText(track.name, 21));
   const artists = escapeXml(truncateText(`${rankLabel} - ${joinArtists(track.artists)}`, 22));
-  const background = safeRank === 1 ? "#1e1e1e" : "#121212";
+  const background = safeRank === 1 ? "#1e1e1e" : widgetBackground;
   const titleColor = safeRank === 1 ? accent : "#f2f2f2";
   const artistColor = safeRank === 1 ? "#f2f2f2" : "#a7a7a7";
   const clipId = `cover-${safeRank}`;
@@ -73,6 +75,7 @@ ${coverDataUri ? `<image href="${escapeXml(coverDataUri)}" x="4" y="4" width="35
 export function renderFullWidgetSvg(data: WidgetData | null): string {
   const title = escapeXml(truncateText(getWidgetTitle(), 18));
   const updatedAt = data?.updatedAt ? formatKstShort(new Date(data.updatedAt)) : "not updated";
+  const widgetBackground = getWidgetBackgroundColor();
   const rowHeight = 43;
   const dividerHeight = 8;
   const height = 624;
@@ -80,7 +83,7 @@ export function renderFullWidgetSvg(data: WidgetData | null): string {
   function renderCompactTrack(rank: number, y: number): string {
     const track = data?.tracks.find((item) => item.rank === rank);
     const rankLabel = String(rank).padStart(2, "0");
-    const background = rank === 1 ? "#1e1e1e" : "#121212";
+    const background = rank === 1 ? "#1e1e1e" : widgetBackground;
     const titleColor = rank === 1 ? "#1db954" : "#f2f2f2";
     const artistColor = rank === 1 ? "#f2f2f2" : "#a7a7a7";
 
@@ -102,8 +105,8 @@ export function renderFullWidgetSvg(data: WidgetData | null): string {
   return svgShell(
     170,
     height,
-    `<rect width="170" height="${height}" fill="#121212"/>
-<rect x="0" y="0" width="170" height="${rowHeight}" fill="#121212"/>
+    `<rect width="170" height="${height}" fill="${widgetBackground}"/>
+<rect x="0" y="0" width="170" height="${rowHeight}" fill="${widgetBackground}"/>
 <circle cx="19.5" cy="21.5" r="15.5" fill="#2a2a2a"/>
 <text x="19.5" y="25" text-anchor="middle" font-size="9" font-family="${FONT}" font-weight="700" fill="#1db954">SP</text>
 <text x="47" y="17" font-size="13" font-family="${FONT}" font-weight="700" fill="#f5f5f5">${title}</text>
@@ -121,7 +124,7 @@ ${renderCompactTrack(8, 423)}
 <rect x="0" y="466" width="170" height="${dividerHeight}" fill="#ffffff"/>
 ${renderCompactTrack(9, 476)}
 ${renderCompactTrack(10, 529)}
-<rect x="0" y="582" width="170" height="${rowHeight}" fill="#121212"/>
+<rect x="0" y="582" width="170" height="${rowHeight}" fill="${widgetBackground}"/>
 <text x="9" y="599" font-size="10" font-family="${FONT}" font-weight="700" fill="#1db954">Link to profile</text>
 <text x="9" y="613" font-size="8.5" font-family="${FONT}" fill="#9b9b9b">open in Spotify</text>`
   );

@@ -1,4 +1,4 @@
-import { getWidgetBaseUrl } from "@/lib/env";
+import { getWidgetBackgroundColor, getWidgetBaseUrl } from "@/lib/env";
 import { getWidgetData } from "@/lib/storage";
 import type { WidgetData } from "@/types/widget";
 
@@ -31,49 +31,49 @@ function renderDynamicHeader(baseUrl: string): string {
   return `<img src="${baseUrl}/api/header.svg" width="${COMPACT_WIDTH}" height="${COMPACT_ROW_HEIGHT}" border="0" style="display:block;width:${COMPACT_WIDTH}px;height:${COMPACT_ROW_HEIGHT}px;margin:0 0 9px 0">`;
 }
 
-function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | null): string {
+function renderSplitWidget(baseUrl: string, index: number, data: WidgetData | null, backgroundColor: string): string {
   if (index === 1) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:#121212;font-family:Arial,sans-serif">${renderDynamicHeader(baseUrl)}${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:${backgroundColor};font-family:Arial,sans-serif">${renderDynamicHeader(baseUrl)}${renderCompactRow(baseUrl, 1, COMPACT_GAP)}${renderCompactRow(baseUrl, 2, "2")}</div>`;
   }
 
   if (index === 2) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:#121212">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}background:${backgroundColor}">${renderCompactRow(baseUrl, 3, COMPACT_GAP)}${renderCompactRow(baseUrl, 4, COMPACT_GAP)}${renderCompactRow(baseUrl, 5, "1")}</div>`;
   }
 
   if (index === 3) {
-    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:1px;box-sizing:border-box;background:#121212">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
+    return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:1px;box-sizing:border-box;background:${backgroundColor}">${renderCompactRow(baseUrl, 6, COMPACT_GAP)}${renderCompactRow(baseUrl, 7, COMPACT_GAP)}${renderCompactRow(baseUrl, 8)}</div>`;
   }
 
   const profileUrl = data?.profile?.spotifyUrl ?? SPOTIFY_PROFILE_URL;
-  return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:2px;box-sizing:border-box;background:#121212;font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:#121212;box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
+  return `<div style="width:${COMPACT_WIDTH}px;height:${COMPACT_HEIGHT}px;overflow:hidden;margin:0 auto;${NAVER_BODY_OFFSET}padding-top:2px;box-sizing:border-box;background:${backgroundColor};font-family:Arial,sans-serif">${renderCompactRow(baseUrl, 9, COMPACT_GAP)}${renderCompactRow(baseUrl, 10, "9")}<div style="height:${COMPACT_ROW_HEIGHT}px;background:${backgroundColor};box-sizing:border-box;padding:7px 9px"><a href="${profileUrl}" target="_blank" style="display:block;font-size:10px;line-height:13px;color:#1db954;text-decoration:none;font-weight:bold">Link to profile</a><span style="display:block;margin-top:3px;font-size:8.5px;line-height:10px;color:#9b9b9b">open in Spotify</span></div></div>`;
 }
 
-function buildWidgetCodes(baseUrl: string, data: WidgetData | null): WidgetCode[] {
+function buildWidgetCodes(baseUrl: string, data: WidgetData | null, backgroundColor: string): WidgetCode[] {
   return [
     {
       label: "Widget 1",
       description: "Header, rank 1-2",
-      html: renderSplitWidget(baseUrl, 1, data)
+      html: renderSplitWidget(baseUrl, 1, data, backgroundColor)
     },
     {
       label: "Widget 2",
       description: "Rank 3-5",
-      html: renderSplitWidget(baseUrl, 2, data)
+      html: renderSplitWidget(baseUrl, 2, data, backgroundColor)
     },
     {
       label: "Widget 3",
       description: "Rank 6-8",
-      html: renderSplitWidget(baseUrl, 3, data)
+      html: renderSplitWidget(baseUrl, 3, data, backgroundColor)
     },
     {
       label: "Widget 4",
       description: "Rank 9-10, profile link",
-      html: renderSplitWidget(baseUrl, 4, data)
+      html: renderSplitWidget(baseUrl, 4, data, backgroundColor)
     }
   ];
 }
 
-function htmlResponse(codes: WidgetCode[], updatedAtKst?: string | null): Response {
+function htmlResponse(codes: WidgetCode[], backgroundColor: string, updatedAtKst?: string | null): Response {
   const cards = codes
     .map(
       (code, index) => `<section class="card">
@@ -117,7 +117,7 @@ function htmlResponse(codes: WidgetCode[], updatedAtKst?: string | null): Respon
     <h1>Naver Widget HTML</h1>
     <p class="lead">Copy these four snippets into Naver Blog widgets in order. Last data update: ${escapeHtml(updatedAtKst ?? "not updated")}</p>
     <div class="grid">${cards}</div>
-    <p class="hint">Use Widget 1, 2, 3, 4 from top to bottom in the Naver layout.</p>
+    <p class="hint">Use Widget 1, 2, 3, 4 from top to bottom in the Naver layout. To make them look like one player, set the Naver group box color to ${escapeHtml(backgroundColor)}.</p>
   </main>
   <script>
     document.querySelectorAll("button[data-copy-target]").forEach((button) => {
@@ -146,8 +146,9 @@ function htmlResponse(codes: WidgetCode[], updatedAtKst?: string | null): Respon
 
 export async function GET() {
   const baseUrl = getWidgetBaseUrl();
+  const backgroundColor = getWidgetBackgroundColor();
   const data = await getWidgetData();
-  const codes = buildWidgetCodes(baseUrl, data);
+  const codes = buildWidgetCodes(baseUrl, data, backgroundColor);
 
-  return htmlResponse(codes, data?.updatedAtKst ?? null);
+  return htmlResponse(codes, backgroundColor, data?.updatedAtKst ?? null);
 }
